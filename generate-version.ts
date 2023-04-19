@@ -8,6 +8,7 @@ const applicationName = "the-application";
 const libraryName = "the-library";
 
 const version = process.argv[2];
+const majorVersion = version.split(".")[0];
 const flags = new Set(process.argv.slice(3));
 const branch = version + Array.from(flags).sort().join("");
 
@@ -24,7 +25,7 @@ runAndCommit(
 );
 if (flags.has("-eslint")) {
   runAndCommit(
-    `npx ng add @angular-eslint/schematics --interactive=false --skip-confirmation=true`
+    `npx ng add @angular-eslint/schematics@${majorVersion} --interactive=false --skip-confirmation=true`
   );
   if (flags.has("-noApp")) {
     runAndCommit(`ng config cli.defaultCollection @angular-eslint/schematics`);
@@ -41,8 +42,9 @@ if (flags.has("-lib")) {
   );
 }
 if (flags.has("-mat")) {
+  const extraArgs = flags.has("-noApp") ? `--project=${applicationName}` : "";
   runAndCommit(
-    "npx ng add @angular/material --interactive=false --skip-confirmation=true"
+    `npx ng add @angular/material@${majorVersion} ${extraArgs} --interactive=false --skip-confirmation=true`
   );
 }
 if (flags.has("-pwa")) {
